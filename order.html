@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SweetBerry Cakes | Order</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"> <!-- [web:175] -->
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- [web:298] -->
+
+  <style>
+    :root{
+      --pink-bg:#ffeef7;
+      --pink-soft:#ffd7eb;
+      --pink-soft-2:#ffcade;
+      --pink-strong:#ff5f9a;
+      --pink-deep:#e03b82;
+      --border-soft:#ffd0e0;
+      --shadow-soft:0 20px 40px rgba(255,125,170,.35);
+
+      --text-main:#3b2631;
+      --text-soft:#8f7b80;
+    }
+    *{box-sizing:border-box;}
+    html,body{scroll-behavior:smooth;}
+    body{
+      font-family:"Poppins",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+      background:var(--pink-bg);
+      color:var(--text-main);
+    }
+    a{text-decoration:none;}
+
+    /* NAVBAR */
+    .navbar{
+      backdrop-filter:blur(14px);
+      background:rgba(255,238,247,.96);
+      border-bottom:1px solid var(--border-soft);
+      transition:box-shadow .2s ease,background-color .2s ease;
+    }
+    .navbar.nav-scrolled{
+      box-shadow:0 8px 20px rgba(224,59,130,.15);
+      background:rgba(255,238,247,.98);
+    }
+    .navbar-brand{
+      font-family:"Playfair Display","Poppins",system-ui,serif;
+      font-weight:700;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      font-size:1.25rem;
+      color:#2c1a22;
+    }
+    .navbar-brand span{
+      display:block;
+      font-family:"Poppins",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+      font-weight:400;
+      font-size:.7rem;
+      letter-spacing:.3em;
+      text-transform:uppercase;
+      color:var(--text-soft);
+      margin-top:-.08rem;
+    }
+    .nav-link{
+      font-size:.8rem;text-transform:uppercase;
+      letter-spacing:.16em;color:var(--text-soft)!important;
+    }
+    .nav-link.active,.nav-link:hover{color:var(--pink-deep)!important;}
+
+    /* CART COUNTER DI NAVBAR */
+    .badge-pill{
+      border-radius:999px;
+      background:var(--pink-soft);
+      color:var(--pink-deep);
+      font-size:.75rem;
+      padding:.15rem .6rem;
+      transition:transform .18s ease,box-shadow .18s ease;
+    }
+    .badge-pill.bump{
+      transform:scale(1.08);
+      box-shadow:0 0 0 6px rgba(255,95,154,.25);
+    }
+
+    /* HEADER */
+    .page-header{
+      padding:5rem 0 2rem;
+      background:linear-gradient(135deg,#ffe6f3 0%,#ffeef7 60%);
+    }
+    .section-title{
+      font-size:1rem;letter-spacing:.2em;
+      text-transform:uppercase;color:var(--text-soft);
+    }
+    .section-title span{color:var(--text-main);}
+
+    /* SUMMARY BAR */
+    .summary-bar{
+      border-radius:999px;
+      background:#fff;
+      border:1px solid var(--border-soft);
+      padding:.55rem 1rem;
+      font-size:.8rem;
+      color:var(--text-soft);
+      box-shadow:0 14px 30px rgba(224,59,130,.18);
+    }
+
+    /* CARD MENU + animasi */
+    .card-product{
+      border-radius:20px;border:1px solid var(--border-soft);
+      background:#ffeef7;
+      box-shadow:var(--shadow-soft);
+      transition:transform .18s ease,box-shadow .18s ease,opacity .4s ease,transform .4s ease;
+      height:100%;
+      opacity:0;
+      transform:translateY(24px);
+    }
+    .card-product.in-view{
+      opacity:1;
+      transform:translateY(0);
+    }
+    .card-product:hover{
+      transform:translateY(-4px) scale(1.01);
+      box-shadow:0 24px 46px rgba(224,59,130,.25);
+    }
+    .card-product .thumb-wrap{
+      background:#ffd7eb;border-radius:16px;padding:.5rem;
+      overflow:hidden;
+    }
+    .card-product img{
+      border-radius:14px;height:140px;width:100%;object-fit:cover;
+      transition:transform .4s ease;
+    }
+    .card-product:hover img{
+      transform:scale(1.05);
+    }
+    .card-product .card-title{
+      font-size:.95rem;font-weight:600;
+    }
+    .card-product .card-text{
+      font-size:.8rem;color:var(--text-soft);
+    }
+    .badge-cat{
+      background:#fff;
+      color:var(--pink-deep);
+      border-radius:999px;
+      padding:.1rem .55rem;
+      font-size:.7rem;
+      border:1px solid rgba(255,198,222,.8);
+    }
+    .price{
+      font-size:1rem;font-weight:600;color:var(--pink-deep);
+    }
+    .price span{
+      font-size:.8rem;font-weight:400;color:var(--text-soft);margin-left:.1rem;
+    }
+    .btn-add{
+      border-radius:999px;
+      padding:.35rem 1.1rem;
+      border:none;
+      background:linear-gradient(135deg,var(--pink-strong),var(--pink-deep));
+      color:#fff;
+      font-size:.8rem;
+      box-shadow:0 10px 22px rgba(224,59,130,.45);
+      position:relative;
+      overflow:hidden;
+    }
+    .btn-add::after{
+      content:'';
+      position:absolute;
+      top:0;left:-40%;
+      width:40%;height:100%;
+      background:linear-gradient(120deg,rgba(255,255,255,.35),transparent);
+      transform:skewX(-20deg);
+      opacity:0;
+      transition:all .4s ease;
+    }
+    .btn-add:hover::after{
+      left:110%;
+      opacity:1;
+    }
+
+    /* CART */
+    .cart-box{
+      background:#fff;border-radius:20px;
+      box-shadow:var(--shadow-soft);
+      border:1px solid var(--border-soft);
+      padding:1.3rem;
+      position:sticky;top:90px;
+    }
+    .cart-header{
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    .info-bar{
+      background:var(--pink-soft-2);
+      border-radius:12px;
+      padding:.5rem .6rem;
+      font-size:.75rem;
+      color:var(--text-main);
+      margin-bottom:.6rem;
+    }
+    .cart-item{
+      display:flex;justify-content:space-between;align-items:center;
+      font-size:.85rem;margin-bottom:.35rem;
+      animation:fadeInCart .25s ease;
+    }
+    @keyframes fadeInCart{
+      from{opacity:0;transform:translateY(6px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+    .cart-item span.small{
+      color:var(--text-soft);
+    }
+    .btn-checkout{
+      border-radius:999px;
+      padding:.55rem 1.2rem;
+      background:linear-gradient(135deg,var(--pink-strong),var(--pink-deep));
+      border:none;color:#fff;font-size:.8rem;
+      text-transform:uppercase;letter-spacing:.12em;
+      width:100%;
+      box-shadow:0 14px 32px rgba(224,59,130,.55);
+    }
+
+    /* FOOTER */
+    footer{
+      background:linear-gradient(135deg,#2d1e26 0%,#3a242f 40%);
+      color:#ffd7eb;
+      padding:2rem 0 1.2rem;
+      margin-top:3rem;
+      border-top:1px solid rgba(255,208,224,.25);
+    }
+    .footer-brand{
+      font-weight:600;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-size:.8rem;
+    }
+    .footer-brand span{
+      display:block;
+      font-weight:400;
+      font-size:.65rem;
+      letter-spacing:.22em;
+      color:#f8c3dc;
+    }
+    .footer-link{
+      font-size:.8rem;
+      color:#ffd7eb;
+    }
+    .footer-link:hover{
+      color:#ffb7d7;
+    }
+    .footer-icon{
+      width:26px;height:26px;
+      border-radius:50%;
+      border:1px solid rgba(255,215,235,.5);
+      display:flex;align-items:center;justify-content:center;
+      font-size:.9rem;
+      color:#ffd7eb;
+      background:rgba(255,255,255,.03);
+    }
+    .footer-small{
+      font-size:.75rem;
+      color:#e9bdd5;
+    }
+
+    /* MOBILE BOTTOM BAR (summary + tombol) */
+    .mobile-cart-bar{
+      position:fixed;
+      left:0;right:0;bottom:0;
+      background:rgba(255,238,247,.95);
+      border-top:1px solid var(--border-soft);
+      box-shadow:0 -8px 20px rgba(224,59,130,.2);
+      padding:.55rem .9rem;
+      display:none;
+      align-items:center;
+      justify-content:space-between;
+      gap:.7rem;
+      z-index:1030;
+    }
+    .mobile-cart-bar span{
+      font-size:.8rem;
+    }
+    .mobile-cart-btn{
+      border-radius:999px;
+      padding:.45rem .9rem;
+      border:none;
+      background:linear-gradient(135deg,var(--pink-strong),var(--pink-deep));
+      color:#fff;
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      white-space:nowrap;
+    }
+
+    @media (max-width:991.98px){
+      .page-header{padding-top:5.4rem;}
+      .cart-box{position:static;margin-top:.5rem;}
+    }
+    @media (max-width:767.98px){
+      .summary-bar{
+        width:100%;
+        margin-top:.6rem;
+      }
+      .mobile-cart-bar{display:flex;}
+      body{padding-bottom:64px;}
+    }
+    @media (max-width:575.98px){
+      .page-header{padding-top:5.1rem;}
+      .section-title{text-align:left;}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container-lg">
+    <a class="navbar-brand" href="index.html">
+      SWEETBERRY
+      <span>Cake &amp; Bakery</span>
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="mainNav">
+      <ul class="navbar-nav me-3 mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link active" href="order.html">Order</a></li>
+      </ul>
+      <span class="badge-pill">Cart: <span id="cart-count">0</span></span>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="container-lg">
+    <h1 class="fw-semibold mb-1">Order SweetBerry Cakes</h1>
+    <p class="text-muted mb-0">
+      Pilih menu favorit lalu tambahkan ke keranjang. Keranjang ini masih simulasi di sisi front end.
+    </p>
+  </div>
+</header>
+
+<main class="py-4">
+  <div class="container-lg">
+    <div class="row g-4">
+      <!-- LIST MENU -->
+      <div class="col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <h2 class="section-title mb-0">semua <span>menu</span></h2>
+          <div class="summary-bar">
+            <span id="summary-items">12 menu tersedia</span> ·
+            <span id="summary-cats">Kategori: Whole cake, Roll, Puff &amp; Choux, Cupcake, Dessert box, Slice</span>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <!-- 1 Berry Layer Cake -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Berry Layer Cake.jpg" alt="Berry Layer Cake">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Berry Layer Cake</h5>
+                  <span class="badge-cat">Whole cake</span>
+                </div>
+                <p class="card-text mb-2">Sponge vanilla tiga lapis dengan krim keju dan stroberi segar.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="145000">Rp145.000 <span>/ 16cm</span></div>
+                  <button class="btn-add" data-name="Berry Layer Cake" data-price="145000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 Strawberry Puff Box -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Strawberry Puff Box.jpg" alt="Strawberry Puff Box">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Strawberry Puff Box</h5>
+                  <span class="badge-cat">Puff &amp; pastry</span>
+                </div>
+                <p class="card-text mb-2">Puff pastry renyah isi krim vanilla dan stroberi manis.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="90000">Rp90.000 <span>/ box isi 6</span></div>
+                  <button class="btn-add" data-name="Strawberry Puff Box" data-price="90000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 Matcha Roll Cake -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Matcha Roll Cake.jpg" alt="Matcha Roll Cake">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Matcha Roll Cake</h5>
+                  <span class="badge-cat">Roll cake</span>
+                </div>
+                <p class="card-text mb-2">Roll cake matcha dengan krim keju lembut dan aroma teh hijau.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="95000">Rp95.000 <span>/ roll</span></div>
+                  <button class="btn-add" data-name="Matcha Roll Cake" data-price="95000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Caramel Choux Box -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Caramel Choux Box.jpg" alt="Caramel Choux Box">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Caramel Choux Box</h5>
+                  <span class="badge-cat">Choux</span>
+                </div>
+                <p class="card-text mb-2">Kue sus klasik dengan saus karamel gurih manis.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="85000">Rp85.000 <span>/ box isi 10</span></div>
+                  <button class="btn-add" data-name="Caramel Choux Box" data-price="85000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5 Chocolate Fudge Cake -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Chocolate Fudge Cake.jpg" alt="Chocolate Fudge Cake">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Chocolate Fudge Cake</h5>
+                  <span class="badge-cat">Whole cake</span>
+                </div>
+                <p class="card-text mb-2">Cake cokelat pekat dengan lapisan fudge ganache.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="155000">Rp155.000 <span>/ 18cm</span></div>
+                  <button class="btn-add" data-name="Chocolate Fudge Cake" data-price="155000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6 Mini Cupcake Set -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Mini Cupcake Set.jpg" alt="Mini Cupcake Set">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Mini Cupcake Set</h5>
+                  <span class="badge-cat">Cupcake</span>
+                </div>
+                <p class="card-text mb-2">Cupcake mini aneka rasa: vanilla, red velvet, cokelat.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="120000">Rp120.000 <span>/ box isi 12</span></div>
+                  <button class="btn-add" data-name="Mini Cupcake Set" data-price="120000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 7 Red Velvet Cake -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Red Velvet Cake.jpg" alt="Red Velvet Cake">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Red Velvet Cake</h5>
+                  <span class="badge-cat">Whole cake</span>
+                </div>
+                <p class="card-text mb-2">Sponge merah lembut dengan cream cheese frosting klasik.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="160000">Rp160.000 <span>/ 18cm</span></div>
+                  <button class="btn-add" data-name="Red Velvet Cake" data-price="160000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 8 Lemon Blossom Cake -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Lemon Blossom Cake.jpg" alt="Lemon Blossom Cake">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Lemon Blossom Cake</h5>
+                  <span class="badge-cat">Whole cake</span>
+                </div>
+                <p class="card-text mb-2">Cake lemon segar dengan glasir lemon dan taburan zest.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="150000">Rp150.000 <span>/ 16cm</span></div>
+                  <button class="btn-add" data-name="Lemon Blossom Cake" data-price="150000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 9 Funfetti Birthday Cake -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Funfetti Birthday Cake.jpg" alt="Funfetti Birthday Cake">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Funfetti Birthday Cake</h5>
+                  <span class="badge-cat">Whole cake</span>
+                </div>
+                <p class="card-text mb-2">Vanilla cake dengan sprinkle warna‑warni dan buttercream lembut.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="140000">Rp140.000 <span>/ 16cm</span></div>
+                  <button class="btn-add" data-name="Funfetti Birthday Cake" data-price="140000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 10 Oreo Cheesecake Box -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Oreo Cheesecake Box.jpg" alt="Oreo Cheesecake Box">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Oreo Cheesecake Box</h5>
+                  <span class="badge-cat">Dessert box</span>
+                </div>
+                <p class="card-text mb-2">Cheesecake lembut dengan crumble Oreo dan krim cokelat.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="60000">Rp60.000 <span>/ box</span></div>
+                  <button class="btn-add" data-name="Oreo Cheesecake Box" data-price="60000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 11 Tiramisu Cup Box -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Tiramisu Cup Box.jpg" alt="Tiramisu Cup Box">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Tiramisu Cup Box</h5>
+                  <span class="badge-cat">Dessert box</span>
+                </div>
+                <p class="card-text mb-2">Lapisan sponge kopi, krim mascarpone, dan taburan kakao.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="65000">Rp65.000 <span>/ box</span></div>
+                  <button class="btn-add" data-name="Tiramisu Cup Box" data-price="65000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 12 Baked Cheesecake Slice -->
+          <div class="col-md-6">
+            <div class="card card-product">
+              <div class="thumb-wrap mt-2 mx-2">
+                <img src="img/Baked Cheesecake Slice.jpg" alt="Baked Cheesecake Slice">
+              </div>
+              <div class="card-body pb-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="card-title mb-0">Baked Cheesecake Slice</h5>
+                  <span class="badge-cat">Slice</span>
+                </div>
+                <p class="card-text mb-2">Potongan cheesecake panggang dengan base biscuit crunchy.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="price" data-price="28000">Rp28.000 <span>/ slice</span></div>
+                  <button class="btn-add" data-name="Baked Cheesecake Slice" data-price="28000">Tambah</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CART -->
+      <div class="col-lg-4">
+        <div class="cart-box">
+          <div class="cart-header mb-2">
+            <h5 class="mb-0">Keranjang</h5>
+            <span class="badge-pill">Item: <span id="cart-count-box">0</span></span>
+          </div>
+          <div class="info-bar">
+            Pesanan akan dikonfirmasi via WhatsApp setelah kamu kirim screenshot keranjang ini ke admin.
+          </div>
+          <p class="small text-muted">
+            Keranjang ini hanya simulasi front‑end, belum tersambung ke sistem pembayaran.
+          </p>
+          <div id="cart-items" class="mb-2 small">
+            <p class="text-muted mb-0">Belum ada item. Tambahkan dari daftar menu.</p>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-semibold">Total</span>
+            <span class="fw-semibold" id="cart-total">Rp0</span>
+          </div>
+          <button class="btn-checkout" id="checkout-btn" type="button">Checkout</button>
+          <p class="small text-muted mt-2 mb-0">
+            Saat backend sudah siap, halaman ini dapat terhubung ke payment gateway sungguhan.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Mobile floating summary -->
+<div class="mobile-cart-bar" id="mobile-cart-bar">
+  <div>
+    <span id="mobile-cart-text">Keranjang kosong</span><br>
+    <span style="font-weight:600;" id="mobile-cart-total">Rp0</span>
+  </div>
+  <button class="mobile-cart-btn" id="mobile-cart-btn">Lihat keranjang</button>
+</div>
+
+<footer>
+  <div class="container-lg">
+    <div class="row gy-3 align-items-start">
+      <div class="col-md-4">
+        <div class="footer-brand mb-2">
+          SweetBerry
+          <span>Cake &amp; Bakery</span>
+        </div>
+        <p class="footer-small mb-1">
+          Dapur rumahan dengan rasa hotel bintang lima, fokus pada cake ulang tahun dan dessert box premium.
+        </p>
+      </div>
+      <div class="col-md-4">
+        <h6 class="text-uppercase small mb-2">Kontak</h6>
+        <p class="footer-small mb-1">Jl. Manis No. 7, Pontianak</p>
+        <p class="footer-small mb-1">WhatsApp: 0812‑3456‑7890</p>
+        <p class="footer-small mb-0">Buka: Senin–Minggu 09.00–20.00</p>
+      </div>
+      <div class="col-md-4">
+        <h6 class="text-uppercase small mb-2">Ikuti kami</h6>
+        <div class="d-flex gap-2 mb-2">
+          <a href="#" class="footer-icon">
+            <img src="img/ic_facebook.png" alt="Facebook" style="width:16px;height:16px;">
+          </a>
+          <a href="#" class="footer-icon">
+            <img src="img/ic_instagram.png" alt="Instagram" style="width:16px;height:16px;">
+          </a>
+          <a href="#" class="footer-icon">
+            <img src="img/ic_twitter.png" alt="Twitter" style="width:16px;height:16px;">
+          </a>
+        </div>
+        <div class="d-flex gap-3">
+          <a href="index.html" class="footer-link">Home</a>
+          <a href="about.html" class="footer-link">About</a>
+          <a href="order.html" class="footer-link">Order</a>
+        </div>
+      </div>
+    </div>
+    <hr class="border-top border-light opacity-25 mt-3 mb-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <p class="mb-0 footer-small">© 2026 SweetBerry Cakes. All rights reserved.</p>
+      <p class="mb-0 footer-small">Made with love &amp; butter.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Cart sederhana di front-end + SweetAlert2
+  const cart = [];
+  const countSpan = document.getElementById('cart-count');
+  const countBoxSpan = document.getElementById('cart-count-box');
+  const itemsContainer = document.getElementById('cart-items');
+  const totalSpan = document.getElementById('cart-total');
+
+  const mobileBar = document.getElementById('mobile-cart-bar');
+  const mobileText = document.getElementById('mobile-cart-text');
+  const mobileTotal = document.getElementById('mobile-cart-total');
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    customClass: { popup: 'shadow-sm' }
+  }); /* [web:298] */
+
+  function formatRupiah(num){
+    return 'Rp' + num.toLocaleString('id-ID');
+  }
+
+  function updateMobileBar(total,count){
+    if(count === 0){
+      mobileText.textContent = 'Keranjang kosong';
+      mobileTotal.textContent = 'Rp0';
+    }else{
+      mobileText.textContent = count + ' item di keranjang';
+      mobileTotal.textContent = formatRupiah(total);
+    }
+  }
+
+  function renderCart(){
+    itemsContainer.innerHTML = '';
+    if(cart.length === 0){
+      itemsContainer.innerHTML = '<p class="text-muted mb-0">Belum ada item. Tambahkan dari daftar menu.</p>';
+    }else{
+      cart.forEach((item,idx)=>{
+        const row = document.createElement('div');
+        row.className = 'cart-item';
+        row.innerHTML = `
+          <div>
+            ${item.name} <span class="small">x${item.qty}</span>
+          </div>
+          <div>
+            <span class="small me-2">${formatRupiah(item.price*item.qty)}</span>
+            <button class="btn btn-sm btn-outline-danger py-0 px-1" data-index="${idx}">x</button>
+          </div>
+        `;
+        itemsContainer.appendChild(row);
+      });
+    }
+    const total = cart.reduce((sum,i)=>sum + i.price*i.qty,0);
+    const count = cart.reduce((sum,i)=>sum + i.qty,0);
+    totalSpan.textContent = formatRupiah(total);
+    countSpan.textContent = count;
+    countBoxSpan.textContent = count;
+    updateMobileBar(total,count);
+
+    const badge = document.querySelector('.badge-pill');
+    badge.classList.remove('bump');
+    void badge.offsetWidth;
+    badge.classList.add('bump');
+
+    document.querySelectorAll('.cart-item button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const index = parseInt(btn.getAttribute('data-index'));
+        const removed = cart[index];
+        cart.splice(index,1);
+        renderCart();
+        Toast.fire({ icon:'info', title:`${removed.name} dihapus dari keranjang` });
+      });
+    });
+  }
+
+  document.querySelectorAll('.btn-add').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const name = btn.getAttribute('data-name');
+      const price = parseInt(btn.getAttribute('data-price'),10);
+      const existing = cart.find(i=>i.name===name);
+      if(existing){
+        existing.qty += 1;
+      }else{
+        cart.push({name,price,qty:1});
+      }
+      renderCart();
+      Toast.fire({ icon:'success', title:`${name} ditambahkan` });
+    });
+  });
+
+  // checkout: redirect ke payment.html dengan total
+  function handleCheckout(){
+    if(cart.length === 0){
+      Swal.fire({
+        icon: 'warning',
+        title: 'Keranjang masih kosong',
+        text: 'Tambahkan minimal satu item sebelum checkout.',
+        confirmButtonColor: '#e03b82'
+      });
+      return;
+    }
+    const total = cart.reduce((sum,i)=>sum + i.price*i.qty,0);
+    window.location.href = 'payment.html?total=' + total; /* [web:293] */
+  }
+
+  document.getElementById('checkout-btn').addEventListener('click', handleCheckout);
+  document.getElementById('mobile-cart-btn').addEventListener('click',()=>{
+    document.querySelector('.cart-box').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+
+  // navbar shadow saat scroll
+  window.addEventListener('scroll',()=>{
+    const nav = document.querySelector('.navbar');
+    if(window.scrollY > 10){
+      nav.classList.add('nav-scrolled');
+    }else{
+      nav.classList.remove('nav-scrolled');
+    }
+  });
+
+  // animasi muncul card saat scroll
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  },{
+    threshold:0.18
+  });
+
+  document.querySelectorAll('.card-product').forEach(card=>observer.observe(card));
+
+  renderCart();
+</script>
+</body>
+</html>
